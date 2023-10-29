@@ -306,7 +306,7 @@ public:
             songId = getValue(https,"uri");
             String isPlay = getValue(https, "is_playing");
             isPlaying = isPlay == "true";
-            Serial.println(isPlay);
+            Serial.println("Is Playing? " + isPlay);
             // Serial.println(songId);
             songId = songId.substring(15,songId.length()-1);
             // Serial.println(songId);
@@ -322,7 +322,7 @@ public:
                 Serial.println("Image load was: ");
                 Serial.println(loaded_ok);
                 refresh = true;
-                tft.fillScreen(0x0000);
+                tft.fillScreen(TFT_BLACK);
             }
             currentSong.album = albumName.substring(1,albumName.length()-1);
             currentSong.artist = artistName.substring(1,artistName.length()-1);
@@ -438,7 +438,7 @@ public:
                 rectWidth,
                 rectHeight,
                 4,
-                TFT_DARKGREEN);
+                TFT_LIGHTGREY);
         }
         if(fullRefresh || likeRefresh){
             if(currentSong.isLiked){
@@ -446,7 +446,7 @@ public:
                 TJpgDec.drawFsJpg(128-20, 0, "/heart.jpg");
             //    tft.fillCircle(128-10,10,10,TFT_GREEN);
             }else{
-                tft.fillRect(128-21,0,21,21,0x0000);
+                tft.fillRect(128-21,0,21,21,TFT_BLACK);
             }
         }
         if(lastSongPositionMs > currentSongPositionMs){
@@ -456,7 +456,7 @@ public:
                 rectWidth  - 4,
                 rectHeight - 4,
                 10,
-                0x0000
+                TFT_BLACK
             );
             lastSongPositionMs = currentSongPositionMs;
         }
@@ -709,7 +709,7 @@ void setup(){
 
     // Initialise the TFT
     tft.begin();
-    tft.fillScreen(0x0000);
+    tft.fillScreen(TFT_BLACK);
     tft.setRotation(4);
     // The jpeg image can be scaled by a factor of 1, 2, 4, or 8
     TJpgDec.setJpgScale(4);
@@ -760,7 +760,7 @@ void loop(){
                 Serial.println("refreshed token");
             }
         }
-        if((millis() - refreshLoop) > 5000){
+        if((millis() - refreshLoop) > 2000){
             spotifyConnection.getTrackInfo();
             
             // spotifyConnection.drawScreen();
