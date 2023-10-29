@@ -715,7 +715,7 @@ void setup(){
     // Initialise the TFT
     tft.begin();
     tft.fillScreen(TFT_BLACK);
-    tft.setRotation(4);
+    tft.setRotation(2);
     // The jpeg image can be scaled by a factor of 1, 2, 4, or 8
     TJpgDec.setJpgScale(4);
 
