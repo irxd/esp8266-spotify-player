@@ -327,6 +327,11 @@ public:
             currentSong.album = albumName.substring(1,albumName.length()-1);
             currentSong.artist = artistName.substring(1,artistName.length()-1);
             currentSong.song = songName.substring(1,songName.length()-1);
+
+            if(currentSong.song.length() > 47) {
+              currentSong.song = currentSong.song.substring(0, 47) + "...";
+            }
+
             currentSong.Id = songId;
             currentSong.isLiked = findLikedStatus(songId);
             success = true;
