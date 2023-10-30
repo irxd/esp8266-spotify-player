@@ -423,7 +423,7 @@ public:
             }else{
                 TJpgDec.setSwapBytes(false);
                 TJpgDec.setJpgScale(1);
-                TJpgDec.drawFsJpg(0, 0, "/Angry.jpg");
+                Serial.println("Album art not found");
             }
             tft.setTextDatum(MC_DATUM);
             tft.setTextWrap(true);
@@ -446,13 +446,7 @@ public:
                 TFT_LIGHTGREY);
         }
         if(fullRefresh || likeRefresh){
-            if(currentSong.isLiked){
-                TJpgDec.setJpgScale(1);
-                TJpgDec.drawFsJpg(128-20, 0, "/heart.jpg");
-            //    tft.fillCircle(128-10,10,10,TFT_GREEN);
-            }else{
-                tft.fillRect(128-21,0,21,21,TFT_BLACK);
-            }
+            tft.fillRect(128-21,0,21,21,TFT_BLACK);
         }
         if(lastSongPositionMs > currentSongPositionMs){
             tft.fillSmoothRoundRect(
@@ -655,7 +649,7 @@ private:
 bool buttonStates[] = {1,1,1,1};
 int debounceDelay = 50;
 unsigned long debounceTimes[] = {0,0,0,0};
-int buttonPins[] = {D1,D2,D0,D6};
+// int buttonPins[] = {D1,D2,D0,D6};
 //Func to establish connection
 //Func to refresh connection 
 //Funcs for all api calls
@@ -737,9 +731,9 @@ void setup(){
     server.on("/callback", handleCallbackPage);      //Which routine to handle at root location
     server.begin();                  //Start server
     Serial.println("HTTP server started");
-    for(int i = 0 ; i < 4; i++){
-        pinMode(buttonPins[i],INPUT_PULLUP);
-    }
+    // for(int i = 0 ; i < 4; i++){
+    //     pinMode(buttonPins[i],INPUT_PULLUP);
+    // }
     for(int i = 0 ; i < 10; i++){
         parts[i] = (char*)malloc(sizeof(char) * 20);
     }
@@ -765,46 +759,46 @@ void loop(){
                 Serial.println("refreshed token");
             }
         }
-        if((millis() - refreshLoop) > 2000){
+        if((millis() - refreshLoop) > 5000){
             spotifyConnection.getTrackInfo();
             
             // spotifyConnection.drawScreen();
             refreshLoop = millis();
         }
-        for(int i = 0; i < 4; i ++){
-            int reading = digitalRead(buttonPins[i]);
-            if( reading != buttonStates[i]){
-                if(millis() - debounceTimes[i] > debounceDelay){
-                    buttonStates[i] = reading;
-                    if(reading == LOW){
-                        switch (i)
-                        {
-                        case 0:
-                            spotifyConnection.togglePlay();
-                            break;
-                        case 1:
-                            spotifyConnection.toggleLiked(spotifyConnection.currentSong.Id);
-                            break;
-                        case 2:
-                            spotifyConnection.skipForward();
-                            break;
-                        case 3:
-                            spotifyConnection.skipBack();
-                            break;
+        // for(int i = 0; i < 4; i ++){
+        //     int reading = digitalRead(buttonPins[i]);
+        //     if( reading != buttonStates[i]){
+        //         if(millis() - debounceTimes[i] > debounceDelay){
+        //             buttonStates[i] = reading;
+        //             if(reading == LOW){
+        //                 switch (i)
+        //                 {
+        //                 case 0:
+        //                     spotifyConnection.togglePlay();
+        //                     break;
+        //                 case 1:
+        //                     spotifyConnection.toggleLiked(spotifyConnection.currentSong.Id);
+        //                     break;
+        //                 case 2:
+        //                     spotifyConnection.skipForward();
+        //                     break;
+        //                 case 3:
+        //                     spotifyConnection.skipBack();
+        //                     break;
                         
-                        default:
-                            break;
-                        }
-                    }
-                    debounceTimes[i] = millis();
-                }
-            }
-        }
+        //                 default:
+        //                     break;
+        //                 }
+        //             }
+        //             debounceTimes[i] = millis();
+        //         }
+        //     }
+        // }
         
-        int volRequest = map(analogRead(A0),0,1023,0,100);
-        if(abs(volRequest - spotifyConnection.currVol) > 2){
-            spotifyConnection.adjustVolume(volRequest);
-        }
+        // int volRequest = map(analogRead(A0),0,1023,0,100);
+        // if(abs(volRequest - spotifyConnection.currVol) > 2){
+        //     spotifyConnection.adjustVolume(volRequest);
+        // }
         timeLoop = millis();
     }else{
         server.handleClient();
